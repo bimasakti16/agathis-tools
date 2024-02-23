@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Character Count</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+    }
+    h2 {
+        color: #333;
+    }
+    #inputText {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        resize: vertical;
+    }
+    p {
+        margin-top: 10px;
+        font-size: 18px;
+        color: #333;
+    }
+    #charCount {
+        font-weight: bold;
+        color: #007bff;
+    }
+    #charToCount {
+        margin-top: 10px;
+        padding: 5px;
+        font-size: 16px;
+    }
+    #countButton {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    #countButton:hover {
+        background-color: #0056b3;
+    }
+</style>
+</head>
+<body>
+
+<h2>Character Count</h2>
+
+<textarea id="inputText" rows="4" cols="50"></textarea>
+
+<p>Character to count: <input type="text" id="charToCount" value=">"></p>
+
+<button id="countButton">Count Characters</button>
+
+<p>Number of characters: <span id="charCount">0</span></p>
+
+<script>
+document.getElementById('countButton').addEventListener('click', function() {
+    var text = document.getElementById('inputText').value;
+    var charToCount = document.getElementById('charToCount').value;
+    var count = (text.match(new RegExp(charToCount, 'g')) || []).length;
+    document.getElementById('charCount').textContent = count;
+});
+</script>
+
+</body>
+</html>
