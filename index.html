@@ -54,20 +54,44 @@
 
 <h2>Character Count</h2>
 
-<textarea id="inputText" rows="4" cols="50"></textarea>
+<textarea id="inputText" rows="10" cols="50"></textarea>
 
 <p>Character to count: <input type="text" id="charToCount" value=">"></p>
 
 <button id="countButton">Count Characters</button>
 
-<p>Number of characters: <span id="charCount">0</span></p>
+<p>Results:</p>
+<div id="result"></div>
 
 <script>
 document.getElementById('countButton').addEventListener('click', function() {
     var text = document.getElementById('inputText').value;
     var charToCount = document.getElementById('charToCount').value;
-    var count = (text.match(new RegExp(charToCount, 'g')) || []).length;
-    document.getElementById('charCount').textContent = count;
+    var lines = text.split('\n');
+    var counts = {};
+    
+    var currentSubFunction = null;
+    
+    lines.forEach(function(line) {
+        var match = line.match(/-: sub-function: (.+)/);
+        if (match) {
+            currentSubFunction = match[1].trim();
+            counts[currentSubFunction] = 0;
+        } else if (currentSubFunction) {
+            counts[currentSubFunction] += (line.match(new RegExp(charToCount, 'g')) || []).length;
+        }
+    });
+    
+    var resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = '';
+    for (var subFunction in counts) {
+        if (counts.hasOwnProperty(subFunction)) {
+            var count = counts[subFunction];
+            var p = document.createElement('p');
+            p.textContent = subFunction + ': ' + count;
+            resultDiv.appendChild(p);
+        }
+    }
 });
 </script>
 
