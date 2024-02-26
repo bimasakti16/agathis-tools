@@ -48,6 +48,18 @@
     #countButton:hover {
         background-color: #0056b3;
     }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
 </style>
 </head>
 <body>
@@ -60,7 +72,6 @@
 
 <button id="countButton">Count Characters</button>
 
-<p>Results:</p>
 <div id="result"></div>
 
 <script>
@@ -69,29 +80,60 @@ document.getElementById('countButton').addEventListener('click', function() {
     var charToCount = document.getElementById('charToCount').value;
     var lines = text.split('\n');
     var counts = {};
+    var totalCount = 0; // Total count of characters
     
     var currentSubFunction = null;
     
     lines.forEach(function(line) {
-        var match = line.match(/-: sub-function: (.+)/);
+        var match = line.match(/\/\/ Sub-Function : (.+)/);
         if (match) {
             currentSubFunction = match[1].trim();
             counts[currentSubFunction] = 0;
         } else if (currentSubFunction) {
-            counts[currentSubFunction] += (line.match(new RegExp(charToCount, 'g')) || []).length;
+            var count = (line.match(new RegExp(charToCount, 'g')) || []).length;
+            counts[currentSubFunction] += count;
+            totalCount += count;
         }
     });
     
     var resultDiv = document.getElementById('result');
     resultDiv.innerHTML = '';
+    
+    var table = document.createElement('table');
+    var headerRow = table.insertRow();
+    var headerNo = document.createElement('th');
+    headerNo.textContent = 'No';
+    headerRow.appendChild(headerNo);
+    var headerSubFunction = document.createElement('th');
+    headerSubFunction.textContent = 'Sub Function';
+    headerRow.appendChild(headerSubFunction);
+    var headerCount = document.createElement('th');
+    headerCount.textContent = 'Count';
+    headerRow.appendChild(headerCount);
+    
+    var countNo = 1;
     for (var subFunction in counts) {
         if (counts.hasOwnProperty(subFunction)) {
             var count = counts[subFunction];
-            var p = document.createElement('p');
-            p.textContent = subFunction + ': ' + count;
-            resultDiv.appendChild(p);
+            var row = table.insertRow();
+            var cellNo = row.insertCell();
+            cellNo.textContent = countNo++;
+            var cellSubFunction = row.insertCell();
+            cellSubFunction.textContent = subFunction;
+            var cellCount = row.insertCell();
+            cellCount.textContent = count;
         }
     }
+    
+    var totalRow = table.insertRow();
+    var totalCellNo = totalRow.insertCell();
+    totalCellNo.textContent = '';
+    var totalCellSubFunction = totalRow.insertCell();
+    totalCellSubFunction.textContent = 'Total';
+    var totalCellCount = totalRow.insertCell();
+    totalCellCount.textContent = totalCount;
+    
+    resultDiv.appendChild(table);
 });
 </script>
 
