@@ -117,7 +117,7 @@ document.getElementById('countButton').addEventListener('click', function() {
             var count = counts[subFunction];
             var row = table.insertRow();
             var cellNo = row.insertCell();
-            cellNo.textContent = countNo++;
+            cellNo.textContent = String.fromCharCode(96 + countNo++); // Convert number to alphabet
             var cellSubFunction = row.insertCell();
             cellSubFunction.textContent = subFunction;
             var cellCount = row.insertCell();
