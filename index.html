@@ -81,6 +81,7 @@ document.getElementById('countButton').addEventListener('click', function() {
     var lines = text.split('\n');
     var counts = {};
     var totalCount = 0; // Total count of characters
+    var totalTableCount = 0; // Total count of tables
     
     var currentSubFunction = null;
     
@@ -88,11 +89,22 @@ document.getElementById('countButton').addEventListener('click', function() {
         var match = line.match(/\/\/ Sub-Function : (.+)/);
         if (match) {
             currentSubFunction = match[1].trim();
-            counts[currentSubFunction] = 0;
+            counts[currentSubFunction] = {
+                count: 0,
+                tableCount: 0
+            };
         } else if (currentSubFunction) {
-            var count = (line.match(new RegExp(charToCount, 'g')) || []).length;
-            counts[currentSubFunction] += count;
+            // Count occurrences of charToCount within the line
+            var count = (line.match(new RegExp('\\' + charToCount, 'g')) || []).length;
+            counts[currentSubFunction].count += count;
             totalCount += count;
+            
+            // Count occurrences of table names within the line
+            var tableMatch = line.match(/^\*\s+/);
+            if (tableMatch) {
+                counts[currentSubFunction].tableCount++;
+                totalTableCount++;
+            }
         }
     });
     
@@ -110,11 +122,15 @@ document.getElementById('countButton').addEventListener('click', function() {
     var headerCount = document.createElement('th');
     headerCount.textContent = 'Count';
     headerRow.appendChild(headerCount);
+    var headerTableCount = document.createElement('th');
+    headerTableCount.textContent = 'Table Count';
+    headerRow.appendChild(headerTableCount);
     
     var countNo = 1;
     for (var subFunction in counts) {
         if (counts.hasOwnProperty(subFunction)) {
-            var count = counts[subFunction];
+            var count = counts[subFunction].count;
+            var tableCount = counts[subFunction].tableCount;
             var row = table.insertRow();
             var cellNo = row.insertCell();
             cellNo.textContent = String.fromCharCode(96 + countNo++); // Convert number to alphabet
@@ -122,6 +138,8 @@ document.getElementById('countButton').addEventListener('click', function() {
             cellSubFunction.textContent = subFunction;
             var cellCount = row.insertCell();
             cellCount.textContent = count;
+            var cellTableCount = row.insertCell();
+            cellTableCount.textContent = tableCount;
         }
     }
     
@@ -132,6 +150,8 @@ document.getElementById('countButton').addEventListener('click', function() {
     totalCellSubFunction.textContent = 'Total';
     var totalCellCount = totalRow.insertCell();
     totalCellCount.textContent = totalCount;
+    var totalCellTableCount = totalRow.insertCell();
+    totalCellTableCount.textContent = totalTableCount; // Total count of tables
     
     resultDiv.appendChild(table);
 });
