@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voucher Validator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: top;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #video-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        #qr-video {
+            width: 100%;
+            max-height:50%;
+            height:500px;
+            border: 1px solid #ddd;
+            transform: scaleX(-1);
+        }
+
+        #qr-result {
+            text-align: center;
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #qr-result2 {
+            text-align: center;
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #response-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        #response-table th, #response-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #response-table th {
+            background-color: #f2f2f2;
+        }
+
+        #clear-responses-btn {
+            display: block;
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #dc3545;
+            color: #fff;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #use-voucher-btn {
+            display: block;
+            margin-top: 10px;
+            padding: 8px;
+            background-color: green;
+            color: #fff;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #use-voucher-btn:disabled {
+            display: block;
+            margin-top: 10px;
+            padding: 8px;
+            background-color: grey;
+            color: #fff;
+            text-align: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://3a-cms-dev.ainosi.id/storage/pwa/kkAqF179QX9d2F8vLMVXpusrwa98lrjwPQjsVQR6.png" alt="Logo" style="max-width: 30%; height: auto;">
+        </div>
+        <h1 style="text-align: center;">Voucher Validator</h1>
+        <video id="qr-video" playsinline></video>
+        <div id="camera-buttons"></div>
+        <div id="qr-result"></div>
+        <div id="qr-result2"></div>
+	    
+        <button id="use-voucher-btn" onclick="useVoucher()" disabled>Use Voucher</button>
+        <button id="clear-responses-btn" onclick="clearResponses()">Clear Responses</button>
+        
+        <table id="response-table"></table>
+    </div>
+
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <script>
+        function postData(url, data) {
+            return fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    renderTable(response.message);
+                }
+                return response.json();
+            });
+        }
+
+        function useVoucher() {
+            const resultElement = document.getElementById("qr-result");
+            const resultElement2 = document.getElementById("qr-result2");
+            const content = resultElement.innerText.trim(); // Get the scanned QR code content
+
+            // Perform the POST request with the scanned QR code data and use_voucher set to true
+            postData("https://3a-api-dev.ainosi.id/v1/services/pwa/api/v1/ticket/validate", { qr_code: content, device_sn: "cms_validation", source: "INTERNAL", use_voucher: true })
+                .then((response) => {
+                    if (response.message == "success") {
+                        renderTable(`Voucher ${content} successfully validated.`);
+                    } else {
+                        renderTable(response.message);
+                    }
+                })
+                .catch((error) => {
+                    renderTable(`Error: ${error.message}`);
+                });
+        }
+        
+        function renderTable(message) {
+            const tableElement = document.getElementById("response-table");
+            const dataRow = tableElement.insertRow(0);
+
+            const td = document.createElement("td");
+            td.textContent = message;
+            dataRow.appendChild(td);
+        }
+        
+        document.addEventListener("DOMContentLoaded", () => {
+        
+            const useVoucherBtn = document.getElementById("use-voucher-btn");
+            const video = document.getElementById("qr-video");
+            const resultElement = document.getElementById("qr-result");
+            const resultElement2 = document.getElementById("qr-result2");
+            const tableElement = document.getElementById("response-table");
+            const cameraButtonsContainer = document.getElementById("camera-buttons");
+
+            const scanner = new Instascan.Scanner({ video });
+
+            Instascan.Camera.getCameras()
+                .then((cameras) => {
+                    if (cameras.length > 0) {
+                        cameras.forEach((camera, index) => {
+                            const button = document.createElement("button");
+                            button.textContent = `Camera ${index + 1}`;
+                            button.addEventListener("click", () => startScanner(camera));
+                            cameraButtonsContainer.appendChild(button);
+                        });
+
+                        // Start the scanner with the first camera by default
+                        startScanner(cameras[0]);
+                    } else {
+                        console.error("No cameras found.");
+                    }
+                })
+                .catch((error) => console.error("Error accessing cameras:", error));
+
+            function startScanner(camera) {
+                scanner.start(camera);
+
+                video.style.transform = "scaleX(1)";
+            }
+
+            scanner.addListener("scan", (content) => {
+                resultElement.innerHTML = `<p>${content}</p>`;
+                
+
+                // Perform the POST request with the scanned QR code data
+                postData("https://3a-api-dev.ainosi.id/v1/services/pwa/api/v1/ticket/validate", { qr_code: content , device_sn: "cms_validation", source: "INTERNAL", use_voucher: false})
+                    .then((response) => {
+                        if(response.message == "success") {
+                            renderTable(`Voucher berhasil ditemukan.`);
+                            resultElement2.innerHTML = `
+                            <p>Nama Tiket : ${response.data.ticket_data.name}</p>
+                            <p>Channel Type : ${response.data.channel}</p>
+                            <p>Tanggal Pembelian : ${response.data.purchase_date}</p>
+                            <p>Visit Date : ${response.data.visit_date}</p>
+                            <p>Used Date : ${response.data.ticket_data.used_date}</p>`;
+                            
+                            if(response.data.ticket_data.used_date == "") {
+                				useVoucherBtn.disabled = content === "";
+                            }
+                            
+                        } else {
+                            renderTable(response.message);
+                        }
+                    })
+                    .catch((error) => {
+                        renderTable(`Error: ${error.message}`);
+                    });
+            });
+
+            function postData(url, data) {
+                return fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        renderTable(response.message);
+                    }
+                    return response.json();
+                });
+            }
+
+            function renderTable(message) {
+                const dataRow = tableElement.insertRow(0);
+
+                const td = document.createElement("td");
+                td.textContent = message;
+                dataRow.appendChild(td);
+            }
+        });
+
+        function clearResponses() {
+            const tableElement = document.getElementById("response-table");
+            const resultElement = document.getElementById("qr-result");
+            const resultElement2 = document.getElementById("qr-result2");
+
+            tableElement.innerHTML = " "; // Clear all rows in the table
+            resultElement.innerHTML = ""; // Clear the result div
+            resultElement2.innerHTML = ""; // Clear the result div
+        }
+    </script>
+</body>
+</html>
