@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Character Count</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+    }
+    h2 {
+        color: #333;
+    }
+    #inputText {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        resize: vertical;
+    }
+    p {
+        margin-top: 10px;
+        font-size: 18px;
+        color: #333;
+    }
+    #charCount {
+        font-weight: bold;
+        color: #007bff;
+    }
+    #charToCount {
+        margin-top: 10px;
+        padding: 5px;
+        font-size: 16px;
+    }
+    #countButton {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    #countButton:hover {
+        background-color: #0056b3;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+</head>
+<body>
+
+<h2>Character Count</h2>
+
+<textarea id="inputText" rows="10" cols="50"></textarea>
+
+<p>Character to count: <input type="text" id="charToCount" value=">"></p>
+
+<button id="countButton">Count Characters</button>
+
+<div id="result"></div>
+
+<script>
+document.getElementById('countButton').addEventListener('click', function() {
+    var text = document.getElementById('inputText').value;
+    var charToCount = document.getElementById('charToCount').value;
+    var lines = text.split('\n');
+    var counts = {};
+    var totalCount = 0; // Total count of characters
+    var totalTableCount = 0; // Total count of tables
+    
+    var currentSubFunction = null;
+    
+    lines.forEach(function(line) {
+        var match = line.match(/\/\/ Sub-Function : (.+)/);
+        if (match) {
+            currentSubFunction = match[1].trim();
+            counts[currentSubFunction] = {
+                count: 0,
+                tableCount: 0
+            };
+        } else if (currentSubFunction) {
+            // Count occurrences of charToCount within the line
+            var count = (line.match(new RegExp('\\' + charToCount, 'g')) || []).length;
+            counts[currentSubFunction].count += count;
+            totalCount += count;
+            
+            // Count occurrences of table names within the line
+            var tableMatch = line.match(/^\*\s+/);
+            if (tableMatch) {
+                counts[currentSubFunction].tableCount++;
+                totalTableCount++;
+            }
+        }
+    });
+    
+    var resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = '';
+    
+    var table = document.createElement('table');
+    var headerRow = table.insertRow();
+    var headerNo = document.createElement('th');
+    headerNo.textContent = 'No';
+    headerRow.appendChild(headerNo);
+    var headerSubFunction = document.createElement('th');
+    headerSubFunction.textContent = 'Sub Function';
+    headerRow.appendChild(headerSubFunction);
+    var headerEmpty = document.createElement('th'); // Empty header cell
+    headerRow.appendChild(headerEmpty);
+    var headerCount = document.createElement('th');
+    headerCount.textContent = 'Count';
+    headerRow.appendChild(headerCount);
+    var headerTableCount = document.createElement('th');
+    headerTableCount.textContent = 'Table Count';
+    headerRow.appendChild(headerTableCount);
+    
+    var countNo = 1;
+    for (var subFunction in counts) {
+        if (counts.hasOwnProperty(subFunction)) {
+            var count = counts[subFunction].count;
+            var tableCount = counts[subFunction].tableCount;
+            var row = table.insertRow();
+            var cellNo = row.insertCell();
+            cellNo.textContent = String.fromCharCode(96 + countNo++); // Convert number to alphabet
+            var cellSubFunction = row.insertCell();
+            cellSubFunction.textContent = subFunction;
+            var cellEmpty = row.insertCell(); // Empty cell
+            var cellCount = row.insertCell();
+            cellCount.textContent = count;
+            var cellTableCount = row.insertCell();
+            cellTableCount.textContent = tableCount;
+        }
+    }
+    
+    var totalRow = table.insertRow();
+    var totalCellNo = totalRow.insertCell();
+    totalCellNo.textContent = '';
+    var totalCellEmpty = totalRow.insertCell(); // Empty cell
+    var totalCellSubFunction = totalRow.insertCell();
+    totalCellSubFunction.textContent = 'Total';
+    var totalCellCount = totalRow.insertCell();
+    totalCellCount.textContent = totalCount;
+    var totalCellTableCount = totalRow.insertCell();
+    totalCellTableCount.textContent = totalTableCount; // Total count of tables
+    
+    resultDiv.appendChild(table);
+});
+</script>
+
+
+</body>
+</html>
