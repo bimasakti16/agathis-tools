@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate Agathis URL</title>
+  <!-- Include CryptoJS library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+
+
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    textarea, select, input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    h3 {
+      margin-top: 20px;
+      color: #333;
+    }
+
+    #encryptedText {
+      resize: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Generate Agathis URL</h1>
+
+  <label for="plainText">Phone Number-Partner Code:</label>
+  <input type="text" id="plainText" value="628000000000-010000026">
+  
+  <label for="plainText">v-Host:</label>
+  <input type="text" id="vhost" value="https://jakone-agathis-tmii-dev.ainosi.id">
+
+  <label for="secretKey">Modul Config:</label>
+  <select id="secretKeyDropdown">
+    <option value="" disabled selected>Pilih Modul Config</option>
+    <option value="$2y$13$AZGLoyOns8Fv7QtBWObqP.GxP">default</option>
+    <option value="$2a$04$3PG1.Om.0RTRpo6lgVNm0.4g2">dana</option>
+    <!-- Add more options as needed -->
+  </select>
+
+  <label for="iv">Last 16 Digits Partner API Key:</label>
+  <input type="text" id="iv">
+
+  <button onclick="encrypt()">Generate</button>
+  
+  <h3>Encrypted param:</h3>
+  <input type="text" id="encryptedText">
+  
+  <h3>URL Agathis:</h3>
+  <textarea id="agathis_url" rows="4" cols="50" readonly></textarea>
+  
+  <button onclick="openurl()">Open URL</button>
+
+  <script>
+    function encrypt() {
+      // Get values from the input fields
+      var plainText = document.getElementById("plainText").value;
+      var vhost = document.getElementById("vhost").value;
+      var secretKeyDropdown = document.getElementById("secretKeyDropdown");
+      var selectedSecretKey = secretKeyDropdown.options[secretKeyDropdown.selectedIndex].value;
+      var iv = document.getElementById("iv").value.substring(document.getElementById("iv").value.length - 16);;
+
+      // Convert hex key, IV, and secret key to WordArray
+      var ivHex = CryptoJS.enc.Utf8.parse(iv);
+      var secretKeyHex = CryptoJS.enc.Utf8.parse(selectedSecretKey);
+
+      // Encrypt using AES-CBC
+      var encrypted = CryptoJS.AES.encrypt(plainText, secretKeyHex, { iv: ivHex, mode: CryptoJS.mode.CBC });
+
+      // Display encrypted text in hex format
+      var encryptedTextHex = encrypted.ciphertext.toString(CryptoJS.enc.Hex);
+      document.getElementById("agathis_url").value = vhost+"?param="+encryptedTextHex;
+      document.getElementById("encryptedText").value = encryptedTextHex;
+      
+      console.log(document.getElementById("encryptedText").value);
+      
+      // Decrypt using AES-CBC
+      var decrypted = CryptoJS.AES.decrypt(document.getElementById("encryptedText").value, secretKeyHex, { iv: ivHex, mode: CryptoJS.mode.CBC });
+
+      console.log(decrypted.toString(CryptoJS.enc.Utf8));
+      // Display decrypted text
+      var decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+      document.getElementById("decryptedText").value = decryptedText;
+    }
+
+    function openurl() {
+      var url = document.getElementById("agathis_url").value;
+      window.open(url, "_blank");
+    }
+  </script>
+
+</body>
+</html>
