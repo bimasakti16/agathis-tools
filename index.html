@@ -136,9 +136,9 @@ document.getElementById('countButton').addEventListener('click', function() {
             var row = table.insertRow();
             var cellNo = row.insertCell();
             cellNo.textContent = String.fromCharCode(96 + countNo++); // Convert number to alphabet
-            var cellEmpty = row.insertCell(); // Empty cell
             var cellSubFunction = row.insertCell();
             cellSubFunction.textContent = subFunction;
+            var cellEmpty = row.insertCell(); // Empty cell
             var cellCount = row.insertCell();
             cellCount.textContent = count;
             var cellTableCount = row.insertCell();
