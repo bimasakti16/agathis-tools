@@ -136,6 +136,7 @@ document.getElementById('countButton').addEventListener('click', function() {
             var row = table.insertRow();
             var cellNo = row.insertCell();
             cellNo.textContent = String.fromCharCode(96 + countNo++); // Convert number to alphabet
+            var cellEmpty = row.insertCell(); // Empty cell
             var cellSubFunction = row.insertCell();
             cellSubFunction.textContent = subFunction;
             var cellCount = row.insertCell();
@@ -148,6 +149,7 @@ document.getElementById('countButton').addEventListener('click', function() {
     var totalRow = table.insertRow();
     var totalCellNo = totalRow.insertCell();
     totalCellNo.textContent = '';
+    var totalCellEmpty = totalRow.insertCell(); // Empty cell
     var totalCellSubFunction = totalRow.insertCell();
     totalCellSubFunction.textContent = 'Total';
     var totalCellCount = totalRow.insertCell();
@@ -158,6 +160,7 @@ document.getElementById('countButton').addEventListener('click', function() {
     resultDiv.appendChild(table);
 });
 </script>
+
 
 </body>
 </html>
