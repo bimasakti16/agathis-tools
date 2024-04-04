@@ -166,7 +166,6 @@
                 console.log(data);
                 var responseLabel = document.getElementById('apiResponseLabel');
                 responseLabel.textContent = JSON.stringify(data, null, 2);
-                alert("Notification sent successfully!");
             }).catch(error => {
                 console.error("Error:", error);
                 alert("Error sending notification!");
