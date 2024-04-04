@@ -67,6 +67,9 @@
     
     <br><br>
 
+    <label for="apiRequestLabel">API Request:</label>
+    <label id="apiRequestLabel" class="box"></label>
+    
     <label for="apiResponseLabel">API Response:</label>
     <label id="apiResponseLabel"></label>
 
@@ -144,6 +147,9 @@
                 },
                 signature: document.getElementById('result').value
             };
+            
+            // Displaying API request payload
+            document.getElementById('apiRequestLabel').textContent = JSON.stringify(payload, null, 2);
 
             fetch("https://settlement-app-dev.ainosi.id/v1/payment/notify", {
                 method: "POST",
