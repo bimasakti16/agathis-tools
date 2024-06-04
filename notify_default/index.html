@@ -60,6 +60,9 @@
     <label for="notifyUrl">Notification URL:</label>
     <input type="text" id="notifyUrl" value="https://settlement-app-dev.ainosi.id/v1/payment/notify">
 
+    <label for="partnerApiKey">Partner API Key:</label>
+    <input type="text" id="partnerApiKey" value="MDEwMDAwMDEwLWdlbmVyYWw6JDJ5JDEzJHBMSnlkOS5oLmVCWU1Nb2djOGxsN09JOS5ST2N3NlpPcmZ2QjRZd0o5YlAwTjJGTWpGRGZ5">
+
     <button onclick="generateSignature()">Send Notify</button>
 
     <label for="result" style="display: none;">Result:</label>
@@ -116,11 +119,11 @@
         function generateSignature() {
             var partnerCode = document.getElementById('partnerCode').value;
             var bookingCode = document.getElementById('bookingCode').value;
+            var secret = document.getElementById('partnerApiKey').value;
             var amount = document.getElementById('amount').value;
             var unixTimestamp = Math.floor(Date.now() / 1000); // Current Unix timestamp
             
             var message = partnerCode + '|' + bookingCode + '|' + amount + '|' + unixTimestamp;
-            var secret = "MDEwMDAwMDEwLWdlbmVyYWw6JDJ5JDEzJHBMSnlkOS5oLmVCWU1Nb2djOGxsN09JOS5ST2N3NlpPcmZ2QjRZd0o5YlAwTjJGTWpGRGZ5";
             var returnType = "hex"; // or "base64"
             
             Sign(message, secret, returnType).then(function(sign) {
