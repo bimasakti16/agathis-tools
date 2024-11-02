@@ -22,13 +22,13 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
             code: "f221fc4dda71ad4edbd296f58a346239d5789505b02bd5a52c448e90801062d1"
         })
     });
-    const checkoutResponse = await accountDecode.json();
+    const accountDecodeResponse = await accountDecode.json();
 
-    const responseToken = checkoutResponse.data.token;
-    
-    const startTime = Date.now();
+    const responseToken = accountDecodeResponse.data.token;
 
     const token = "Bearer " + responseToken;
+    
+    const startTime = Date.now();
     
     // Step 1: Execute the first API call (update cart)
     const updateCart = await fetch('https://3a-api-dev.ainosi.id/api/v1/cart/update', {
