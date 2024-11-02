@@ -10,22 +10,7 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
         outputElement.textContent = text + '\n\n' + outputElement.textContent;
     };
 
-    // Step 2: Execute the second API call (checkout)
-    const accountDecode = await fetch('https://3a-api-dev.ainosi.id/api/v1/account/decode', {
-        method: 'POST',
-        headers: {
-            'Origin': 'https://pos-tmr.ainosi.com',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            code: "f221fc4dda71ad4edbd296f58a346239d5789505b02bd5a52c448e90801062d1"
-        })
-    });
-    const accountDecodeResponse = await accountDecode.json();
-
-    const responseToken = accountDecodeResponse.data.token;
-
-    const token = "Bearer " + responseToken;
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwb3MtdG1yLmFpbm9zaS5jb20iLCJleHAiOjE3MzA1NjA1OTQsImlhdCI6MTczMDU1Njk5NCwiaXNzIjoicHdhLWlzc3VlciIsInBob25lIjoiRTYzRTRERTVGMEE1Iiwic3ViIjoiMDEwMDAwMDI2In0.dnCTyDSiLCj4XHb6A819N8-Z9pANRqchBqYacexl__8";
     
     const startTime = Date.now();
     
