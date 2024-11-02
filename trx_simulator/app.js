@@ -45,7 +45,7 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
 
     const refNo = checkoutResponse.data.ref_no;
     const unixTimeNow = Math.floor(Date.now() / 1000);
-    const unixTimestamp = unixTimeNow;
+    const unixTimestamp = unixTimeNow.toString();
 
     // Step 3: Create signature
     const signatureString = `010000026|${refNo}|3|${unixTimestamp}`;
