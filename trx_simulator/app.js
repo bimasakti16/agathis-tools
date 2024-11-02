@@ -10,7 +10,7 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
         outputElement.textContent = text + '\n\n' + outputElement.textContent;
     };
 
-    const token = 'Bearer ' + document.getElementById('checkoutToken').value;
+    const token = 'Bearer ' + document.getElementById('token').value;
     
     const startTime = Date.now();
     
