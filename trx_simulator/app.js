@@ -96,4 +96,5 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
     const endTime = Date.now();
     const executionTime = (endTime - startTime); // Time in seconds
     updateOutput("Total Execution Time: " + executionTime + " ms");
+    updateOutput("===========================================================");
 });
