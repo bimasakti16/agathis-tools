@@ -64,6 +64,7 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
         .map(b => b.toString(16).padStart(2, '0'))
         .join('');
 
+    updateOutput("Signature: " + signatureString);
     updateOutput("Encrypted Signature: " + encryptedSignature);
 
     // Step 4: Execute the third API call (notify payment)
