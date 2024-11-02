@@ -43,7 +43,7 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
     const checkoutResponse = await checkout.json();
     updateOutput("Checkout Response: " + JSON.stringify(checkoutResponse));
 
-    const refNo = checkoutResponse.ref_no;
+    const refNo = checkoutResponse.data.ref_no;
     const unixTimeNow = Math.floor(Date.now() / 1000);
     const unixTimestamp = unixTimeNow;
 
