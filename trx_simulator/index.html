@@ -85,30 +85,32 @@
     }
 </style>
 </head>
-<body class="container">
-    <h1>Transaction Simulator Agathis</h1>
-    <div class="input-group">
-        <label for="updateCartToken">Token:</label>
-        <br/>
-        <textarea id="token" placeholder="Enter Token" rows="4" cols="70"></textarea>
-    </div>
-
-    <div class="input-group">
-        <label for="repeat">Repeat:</label>
-        <input type="number" id="repeat" placeholder="Number of repetitions" min="0">
-    </div>
+<body>
+    <div class="container">
+        <h1>Transaction Simulator Agathis</h1>
+        <div class="input-group">
+            <label for="updateCartToken">Token:</label>
+            <br/>
+            <textarea id="token" placeholder="Enter Token" rows="4" cols="70"></textarea>
+        </div>
     
-    <div class="input-group">
-        <label for="delay">Delay (s):</label>
-        <input type="number" id="delay" placeholder="Delay in milliseconds" min="0">
-    </div>
-    
-    <button id="start">Start</button>
-    <button id="end">End</button>
+        <div class="input-group">
+            <label for="repeat">Repeat:</label>
+            <input type="number" id="repeat" placeholder="Number of repetitions" min="0">
+        </div>
         
-    <button style="display:none" id="execute-flow">Execute</button>
-    <pre id="output"></pre>
-
-    <script src="trx_simulator/app.js"></script>
+        <div class="input-group">
+            <label for="delay">Delay (s):</label>
+            <input type="number" id="delay" placeholder="Delay in milliseconds" min="0">
+        </div>
+        
+        <button id="start">Start</button>
+        <button id="end">End</button>
+            
+        <button style="display:none" id="execute-flow">Execute</button>
+        <pre id="output"></pre>
+    
+        <script src="trx_simulator/app.js"></script>
+    </div>
 </body>
 </html>
