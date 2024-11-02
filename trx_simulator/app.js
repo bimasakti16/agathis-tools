@@ -19,7 +19,7 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
         headers: {
             'Origin': 'https://pos-tmr.ainosi.com',
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwb3MtdG1yLmFpbm9zaS5jb20iLCJleHAiOjE3MzA1NTY0NDMsImlhdCI6MTczMDU1Mjg0MywiaXNzIjoicHdhLWlzc3VlciIsInBob25lIjoiRTYzRTRERTVGMEE1Iiwic3ViIjoiMDEwMDAwMDI2In0.30nLtciVEVkxy4sdIbDWMKSxC_cEp208sQQ3TgYPWQs'
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwb3MtdG1yLmFpbm9zaS5jb20iLCJleHAiOjE3MzA1NjAwNjcsImlhdCI6MTczMDU1NjQ2NywiaXNzIjoicHdhLWlzc3VlciIsInBob25lIjoiRTYzRTRERTVGMEE1Iiwic3ViIjoiMDEwMDAwMDI2In0.5jDhEifBALLpbpqIWG-On8BQZrQITJt-OGYb2YN-xxY'
         },
         body: JSON.stringify({
             partner_code: "010000026",
