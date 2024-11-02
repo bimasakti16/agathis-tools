@@ -10,8 +10,25 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
         outputElement.textContent = text + '\n\n' + outputElement.textContent;
     };
 
+    // Step 2: Execute the second API call (checkout)
+    const accountDecode = await fetch('https://3a-api-dev.ainosi.id/api/v1/account/decode', {
+        method: 'POST',
+        headers: {
+            'Origin': 'https://pos-tmr.ainosi.com',
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        body: JSON.stringify({
+            code: "f221fc4dda71ad4edbd296f58a346239d5789505b02bd5a52c448e90801062d1"
+        })
+    });
+    const checkoutResponse = await accountDecode.json();
+
+    const responseToken = checkoutResponse.data.token;
     
     const startTime = Date.now();
+
+    const token = "Bearer " + responseToken;
     
     // Step 1: Execute the first API call (update cart)
     const updateCart = await fetch('https://3a-api-dev.ainosi.id/api/v1/cart/update', {
@@ -19,7 +36,7 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
         headers: {
             'Origin': 'https://pos-tmr.ainosi.com',
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwb3MtdG1yLmFpbm9zaS5jb20iLCJleHAiOjE3MzA1NjAwNjcsImlhdCI6MTczMDU1NjQ2NywiaXNzIjoicHdhLWlzc3VlciIsInBob25lIjoiRTYzRTRERTVGMEE1Iiwic3ViIjoiMDEwMDAwMDI2In0.5jDhEifBALLpbpqIWG-On8BQZrQITJt-OGYb2YN-xxY'
+            'Authorization': token
         },
         body: JSON.stringify({
             partner_code: "010000026",
@@ -41,7 +58,7 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
         headers: {
             'Origin': 'https://pos-tmr.ainosi.com',
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwb3MtdG1yLmFpbm9zaS5jb20iLCJleHAiOjE3MzA1NTY0NDMsImlhdCI6MTczMDU1Mjg0MywiaXNzIjoicHdhLWlzc3VlciIsInBob25lIjoiRTYzRTRERTVGMEE1Iiwic3ViIjoiMDEwMDAwMDI2In0.30nLtciVEVkxy4sdIbDWMKSxC_cEp208sQQ3TgYPWQs'
+            'Authorization': token
         },
         body: JSON.stringify({
             channel_type: "GATE",
