@@ -10,7 +10,7 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
         outputElement.textContent = text + '\n\n' + outputElement.textContent;
     };
 
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwb3MtdG1yLmFpbm9zaS5jb20iLCJleHAiOjE3MzA1NjA1OTQsImlhdCI6MTczMDU1Njk5NCwiaXNzIjoicHdhLWlzc3VlciIsInBob25lIjoiRTYzRTRERTVGMEE1Iiwic3ViIjoiMDEwMDAwMDI2In0.dnCTyDSiLCj4XHb6A819N8-Z9pANRqchBqYacexl__8";
+    const token = 'Bearer ' + document.getElementById('checkoutToken').value;
     
     const startTime = Date.now();
     
