@@ -28,6 +28,7 @@ document.getElementById('start').addEventListener('click', () => {
 document.getElementById('end').addEventListener('click', () => {
     clearInterval(intervalId);
     updateOutput("Process ended by user.");
+    updateOutput("===========================================================");
 });
 
 //document.getElementById('execute-flow').addEventListener('click', async () => {
