@@ -1,9 +1,12 @@
 document.getElementById('execute-flow').addEventListener('click', async () => {
+    
     const outputElement = document.getElementById('output');
 
     // Helper function to update the output
     const updateOutput = (text) => outputElement.textContent += text + '\n\n';
-
+    
+    const startTime = Date.now();
+    
     // Step 1: Execute the first API call (update cart)
     const updateCart = await fetch('https://3a-api-dev.ainosi.id/api/v1/cart/update', {
         method: 'POST',
@@ -87,5 +90,10 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
         })
     });
     const notifyPaymentResponse = await notifyPayment.json();
-    updateOutput("Notify Payment Response: " + JSON.stringify(notifyPaymentResponse));
+    updateOutput("Notify Payment Response: " + JSON.stringify(notifyPaymentResponse));    
+
+    // Calculate and display total execution time
+    const endTime = Date.now();
+    const executionTime = (endTime - startTime); // Time in seconds
+    updateOutput("Total Execution Time: " + executionTime + " ms");
 });
