@@ -15,8 +15,7 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
         method: 'POST',
         headers: {
             'Origin': 'https://pos-tmr.ainosi.com',
-            'Content-Type': 'application/json',
-            'Authorization': token
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             code: "f221fc4dda71ad4edbd296f58a346239d5789505b02bd5a52c448e90801062d1"
