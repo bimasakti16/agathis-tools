@@ -3,7 +3,13 @@ document.getElementById('execute-flow').addEventListener('click', async () => {
     const outputElement = document.getElementById('output');
 
     // Helper function to update the output
-    const updateOutput = (text) => outputElement.textContent += text + '\n\n';
+    // const updateOutput = (text) => outputElement.textContent += text + '\n\n';
+
+    // Helper function to update the output at the top
+    const updateOutput = (text) => {
+        outputElement.textContent = text + '\n\n' + outputElement.textContent;
+    };
+
     
     const startTime = Date.now();
     
