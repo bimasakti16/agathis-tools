@@ -1,4 +1,33 @@
-document.getElementById('execute-flow').addEventListener('click', async () => {
+let intervalId;
+let currentRepeat = 0;
+
+document.getElementById('start').addEventListener('click', () => {
+    const repeatCount = parseInt(document.getElementById('repeat').value, 10) || 0;
+    const delay = parseInt(document.getElementById('delay').value, 10) || 1000;
+
+    // Reset current repeat counter and clear any existing interval
+    currentRepeat = 0;
+    clearInterval(intervalId);
+
+    // Start the interval loop
+    intervalId = setInterval(async () => {
+        if (repeatCount > 0 && currentRepeat >= repeatCount) {
+            clearInterval(intervalId); // Stop if we reach the repeat limit
+            return;
+        }
+        currentRepeat++;
+        await executeFlow(); // Call the execute function
+    }, delay);
+});
+
+document.getElementById('end').addEventListener('click', () => {
+    clearInterval(intervalId);
+    updateOutput("Process ended by user.");
+});
+
+//document.getElementById('execute-flow').addEventListener('click', async () => {
+// Main execute flow function
+const executeFlow = async () => {
     
     const outputElement = document.getElementById('output');
 
