@@ -8,7 +8,7 @@ const updateOutput = (text) => {
 
 document.getElementById('start').addEventListener('click', () => {
     const repeatCount = parseInt(document.getElementById('repeat').value, 10) || 0;
-    const delay = parseInt(document.getElementById('delay').value, 10) || 1000;
+    const delay = parseInt(document.getElementById('delay').value, 10)*1000 || 1000;
 
     // Reset current repeat counter and clear any existing interval
     currentRepeat = 0;
