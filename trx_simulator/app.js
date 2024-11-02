@@ -1,6 +1,11 @@
 let intervalId;
 let currentRepeat = 0;
 
+const updateOutput = (text) => {
+    const outputElement = document.getElementById('output');
+    outputElement.textContent = text + '\n\n' + outputElement.textContent;
+};
+
 document.getElementById('start').addEventListener('click', () => {
     const repeatCount = parseInt(document.getElementById('repeat').value, 10) || 0;
     const delay = parseInt(document.getElementById('delay').value, 10) || 1000;
