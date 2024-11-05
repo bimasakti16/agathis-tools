@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Drag and Drop</title>
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#container {
+  width: calc(9 / 16 * 100vh);
+  height: 100%; 
+  position: relative;
+  border: 1px solid black;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.draggable { /* Apply to all draggable elements */
+  cursor: move;
+  position: absolute;
+}
+
+.draggable img {
+  width: 100px;
+  height: 100%;
+  display: block;
+}
+
+.rotate {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.range {
+  position: absolute;
+  background-color: rgba(255, 0, 0, 0.2);
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div id="container">
+  <div class="draggable" id="draggable1">
+    <img src="waterwheel.png" alt="Draggable Image 1">
+  </div>
+  <div class="draggable" id="draggable2">
+    <img src="waterwheel.png" alt="Draggable Image 2">
+  </div>
+  <div class="draggable" id="draggable3">
+    <img src="waterwheel.png" alt="Draggable Image 2">
+  </div>
+  <div class="range" id="range1"></div>
+  <div class="range" id="range2"></div>
+  <div class="range" id="range3"></div>
+</div>
+
+<script>
+// Function to make an element draggable with associated range
+function makeDraggable(elmntId, rangeId, rotateXMin, rotateYMin) {
+  var elmnt = document.getElementById(elmntId);
+  var range = document.getElementById(rangeId);
+  var img = elmnt.querySelector('img'); // Select the image inside the draggable element
+
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  elmnt.onmousedown = dragMouseDown;
+
+  function dragMouseDown(e) {
+    if (elmnt.classList.contains('rotate')) return;
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    // if (elmnt.classList.contains('rotate')) return;
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+
+    // Get container boundaries
+    var container = document.getElementById("container");
+    var containerRect = container.getBoundingClientRect();
+
+    // Calculate new position, but keep it within the container
+    var newX = elmnt.offsetLeft - pos1;
+    var newY = elmnt.offsetTop - pos2;
+
+    if (newX < 0) newX = 0;
+    if (newY < 0) newY = 0;
+    if (newX + elmnt.offsetWidth > containerRect.width) {
+      newX = containerRect.width - elmnt.offsetWidth;
+    }
+    if (newY + elmnt.offsetHeight > containerRect.height) {
+      newY = containerRect.height - elmnt.offsetHeight;
+    }
+
+    elmnt.style.top = newY + "px";
+    elmnt.style.left = newX + "px";
+  }
+
+  function closeDragElement() {
+    var x = elmnt.offsetLeft;
+    var y = elmnt.offsetTop;
+
+    var rotateXMax = rotateXMin + elmnt.offsetWidth*1.5;
+    var rotateYMax = rotateYMin + elmnt.offsetHeight*1.5;
+
+    if (x > rotateXMin && x < rotateXMax && y > rotateYMin && y < rotateYMax) {
+      elmnt.classList.add("rotate");
+      var centerX = rotateXMin + (rotateXMax - rotateXMin) / 2 - elmnt.offsetWidth / 2;
+      var centerY = rotateYMin + (rotateYMax - rotateYMin) / 2 - elmnt.offsetHeight / 2;
+      elmnt.style.left = centerX + "px";
+      elmnt.style.top = centerY + "px";
+      elmnt.onmousedown = null;
+    } else {
+      elmnt.classList.remove("rotate");
+    }
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+
+  // Set range position and size after image loads
+  img.onload = function() { // Attach onload to the image
+    range.style.left = rotateXMin + 'px';
+    range.style.top = rotateYMin + 'px';
+    range.style.width = (elmnt.offsetWidth*1.5) + 'px';
+    range.style.height = (elmnt.offsetHeight*1.5) + 'px';
+  }
+}
+
+// Create multiple draggable objects with different ranges
+makeDraggable("draggable1", "range1", 300, 50); // Example coordinates
+makeDraggable("draggable2", "range2", 300, 350); // Different coordinates
+makeDraggable("draggable3", "range3", 300, 650); // Different coordinates
+</script>
+
+</body>
+</html>
