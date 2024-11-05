@@ -23,7 +23,7 @@ html, body {
 }
 
 .draggable img {
-  width: 100px;
+  width: calc(0.3 * calc(9 / 16 * 100vh));
   height: 100%;
   display: block;
 }
@@ -48,13 +48,13 @@ html, body {
 
 <div id="container">
   <div class="draggable" id="draggable1">
-    <img src="edugamenology/waterwheel.png" alt="Draggable Image 1">
+    <img src="waterwheel.png" alt="Draggable Image 1">
   </div>
   <div class="draggable" id="draggable2">
-    <img src="edugamenology/waterwheel.png" alt="Draggable Image 2">
+    <img src="waterwheel.png" alt="Draggable Image 2">
   </div>
   <div class="draggable" id="draggable3">
-    <img src="edugamenology/waterwheel.png" alt="Draggable Image 2">
+    <img src="waterwheel.png" alt="Draggable Image 2">
   </div>
   <div class="range" id="range1"></div>
   <div class="range" id="range2"></div>
@@ -71,24 +71,53 @@ function makeDraggable(elmntId, rangeId, rotateXMin, rotateYMin) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   elmnt.onmousedown = dragMouseDown;
 
+  elmnt.addEventListener('mousedown', dragMouseDown);
+  elmnt.addEventListener('touchstart', dragMouseDown);
+
   function dragMouseDown(e) {
     if (elmnt.classList.contains('rotate')) return;
     e = e || window.event;
     e.preventDefault();
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    document.onmousemove = elementDrag;
+
+    if (e.type === 'touchstart') {
+      pos3 = e.touches[0].clientX;
+      pos4 = e.touches[0].clientY;
+    } else {
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+    }
+    
+    document.addEventListener('mouseup', closeDragElement);
+    document.addEventListener('touchend', closeDragElement);   
+
+    document.addEventListener('mousemove', elementDrag);
+    document.addEventListener('touchmove', elementDrag);
   }
 
   function elementDrag(e) {
     // if (elmnt.classList.contains('rotate')) return;
     e = e || window.event;
     e.preventDefault();
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
+
+    // *** Get touch position if it's a touch event
+    if (e.type === 'touchmove') {
+      pos1 = pos3 - e.touches[0].clientX;
+      pos2 = pos4 - e.touches[0].clientY;
+      pos3 = e.touches[0].clientX;
+      pos4 = e.touches[0].clientY;   
+
+    } else {
+      pos1 = pos3 - e.clientX;
+      pos2 = pos4 - e.clientY;
+      pos3 = e.clientX;
+      pos4 = e.clientY;   
+
+    }
+
+    // pos1 = pos3 - e.clientX;
+    // pos2 = pos4 - e.clientY;
+    // pos3 = e.clientX;
+    // pos4 = e.clientY;
 
     // Get container boundaries
     var container = document.getElementById("container");
@@ -115,8 +144,8 @@ function makeDraggable(elmntId, rangeId, rotateXMin, rotateYMin) {
     var x = elmnt.offsetLeft;
     var y = elmnt.offsetTop;
 
-    var rotateXMax = rotateXMin + elmnt.offsetWidth*1.5;
-    var rotateYMax = rotateYMin + elmnt.offsetHeight*1.5;
+    var rotateXMax = rotateXMin + elmnt.offsetWidth*1.25;
+    var rotateYMax = rotateYMin + elmnt.offsetHeight*1.25;
 
     if (x > rotateXMin && x < rotateXMax && y > rotateYMin && y < rotateYMax) {
       elmnt.classList.add("rotate");
@@ -130,21 +159,27 @@ function makeDraggable(elmntId, rangeId, rotateXMin, rotateYMin) {
     }
     document.onmouseup = null;
     document.onmousemove = null;
+
+    document.removeEventListener('mouseup', closeDragElement);
+    document.removeEventListener('touchend', closeDragElement);
+    document.removeEventListener('mousemove', elementDrag);
+    document.removeEventListener('touchmove', elementDrag);   
+
   }
 
   // Set range position and size after image loads
   img.onload = function() { // Attach onload to the image
     range.style.left = rotateXMin + 'px';
     range.style.top = rotateYMin + 'px';
-    range.style.width = (elmnt.offsetWidth*1.5) + 'px';
-    range.style.height = (elmnt.offsetHeight*1.5) + 'px';
+    range.style.width = (elmnt.offsetWidth*1.25) + 'px';
+    range.style.height = (elmnt.offsetHeight*1.25) + 'px';
   }
 }
 
 // Create multiple draggable objects with different ranges
 makeDraggable("draggable1", "range1", 300, 50); // Example coordinates
-makeDraggable("draggable2", "range2", 300, 350); // Different coordinates
-makeDraggable("draggable3", "range3", 300, 650); // Different coordinates
+makeDraggable("draggable2", "range2", 300, 650); // Different coordinates
+makeDraggable("draggable3", "range3", 300, 1250); // Different coordinates
 </script>
 
 </body>
