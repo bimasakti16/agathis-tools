@@ -24,7 +24,7 @@ html, body {
 
 .draggable img {
   width: calc(0.3 * calc(9 / 16 * 100vh));
-  height: 100%;
+  height: calc(0.3 * calc(9 / 16 * 100vh));
   display: block;
 }
 
@@ -194,8 +194,8 @@ function getHeight(elmntId) {
 
 // Create multiple draggable objects with different ranges
 makeDraggable("draggable1", "range1", (screenWidth - getWidth("draggable1")), (screenHeight - getHeight("draggable1")), 4); // Example coordinates
-makeDraggable("draggable2", "range2", 0, (screenHeight/2 - getHeight("draggable1")/2), 10); // Different coordinates
-makeDraggable("draggable3", "range3", (screenWidth - getWidth("draggable1")), 0, 0.1); // Different coordinates
+makeDraggable("draggable2", "range2", 0, (screenHeight/2 - getHeight("draggable2")/2), 10); // Different coordinates
+makeDraggable("draggable3", "range3", (screenWidth - getWidth("draggable3")), 0, 0.1); // Different coordinates
 </script>
 
 </body>
