@@ -4,7 +4,7 @@
 <title>Drag and Drop</title>
 <style>
 html, body {
-  height: 100%;
+  height: 100vh;
   margin: 0;
 }
 
@@ -34,7 +34,7 @@ html, body {
 
 @keyframes spin {
   from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  to { transform: rotate(-360deg); }
 }
 
 .range {
@@ -48,22 +48,28 @@ html, body {
 
 <div id="container">
   <div class="draggable" id="draggable1">
-    <img src="edugamenology/waterwheel.png" alt="Draggable Image 1">
+    <img src="waterwheel.png" alt="Draggable Image 1">
   </div>
   <div class="draggable" id="draggable2">
-    <img src="edugamenology/waterwheel.png" alt="Draggable Image 2">
+    <img src="waterwheel.png" alt="Draggable Image 2">
   </div>
   <div class="draggable" id="draggable3">
-    <img src="edugamenology/waterwheel.png" alt="Draggable Image 2">
+    <img src="waterwheel.png" alt="Draggable Image 2">
   </div>
   <div class="range" id="range1"></div>
   <div class="range" id="range2"></div>
   <div class="range" id="range3"></div>
 </div>
+<!-- <div style="height: 100%; width: calc(9 / 16 * 100vh); border: 1px solid black;"></div> -->
 
 <script>
+
+var screenWidth = document.getElementById('container').offsetWidth;
+var screenHeight = document.getElementById('container').offsetHeight;
+
 // Function to make an element draggable with associated range
-function makeDraggable(elmntId, rangeId, rotateXMin, rotateYMin) {
+
+function makeDraggable(elmntId, rangeId, rotateXMin, rotateYMin, speed) {
   var elmnt = document.getElementById(elmntId);
   var range = document.getElementById(rangeId);
   var img = elmnt.querySelector('img'); // Select the image inside the draggable element
@@ -148,7 +154,9 @@ function makeDraggable(elmntId, rangeId, rotateXMin, rotateYMin) {
     var rotateYMax = rotateYMin + elmnt.offsetHeight*1.25;
 
     if (x > rotateXMin && x < rotateXMax && y > rotateYMin && y < rotateYMax) {
+      
       elmnt.classList.add("rotate");
+      elmnt.style.animation = `spin ${speed}s linear infinite`;
       var centerX = rotateXMin + (rotateXMax - rotateXMin) / 2 - elmnt.offsetWidth / 2;
       var centerY = rotateYMin + (rotateYMax - rotateYMin) / 2 - elmnt.offsetHeight / 2;
       elmnt.style.left = centerX + "px";
@@ -176,10 +184,18 @@ function makeDraggable(elmntId, rangeId, rotateXMin, rotateYMin) {
   }
 }
 
+function getWidth(elmntId) {
+    return document.getElementById(elmntId).offsetWidth * 1.25;
+}
+
+function getHeight(elmntId) {
+    return document.getElementById(elmntId).offsetHeight * 1.25;
+}
+
 // Create multiple draggable objects with different ranges
-makeDraggable("draggable1", "range1", 300, 50); // Example coordinates
-makeDraggable("draggable2", "range2", 300, 650); // Different coordinates
-makeDraggable("draggable3", "range3", 300, 1250); // Different coordinates
+makeDraggable("draggable1", "range1", (screenWidth - getWidth("draggable1")), (screenHeight - getHeight("draggable1")), 4); // Example coordinates
+makeDraggable("draggable2", "range2", 0, (screenHeight/2 - getHeight("draggable1")/2), 10); // Different coordinates
+makeDraggable("draggable3", "range3", (screenWidth - getWidth("draggable1")), 0, 0.1); // Different coordinates
 </script>
 
 </body>
