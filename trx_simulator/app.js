@@ -6,23 +6,48 @@ const updateOutput = (text) => {
     outputElement.textContent = text + '\n\n' + outputElement.textContent;
 };
 
+// document.getElementById('start').addEventListener('click', () => {
+//     const repeatCount = parseInt(document.getElementById('repeat').value, 10) || 0;
+//     const delay = parseInt(document.getElementById('delay').value, 10)*1000 || 1000;
+
+//     // Reset current repeat counter and clear any existing interval
+//     currentRepeat = 0;
+//     clearInterval(intervalId);
+
+//     // Start the interval loop
+//     intervalId = setInterval(async () => {
+//         if (repeatCount > 0 && currentRepeat >= repeatCount) {
+//             clearInterval(intervalId); // Stop if we reach the repeat limit
+//             return;
+//         }
+//         currentRepeat++;
+//         await executeFlow(); // Call the execute function
+//     }, delay);
+// });
+
 document.getElementById('start').addEventListener('click', () => {
-    const repeatCount = parseInt(document.getElementById('repeat').value, 10) || 0;
-    const delay = parseInt(document.getElementById('delay').value, 10)*1000 || 1000;
+  const repeatCount = parseInt(document.getElementById('repeat').value, 10) || 0;
+  const delay = parseInt(document.getElementById('delay').value, 10) * 1000 || 1000;
 
-    // Reset current repeat counter and clear any existing interval
-    currentRepeat = 0;
-    clearInterval(intervalId);
+  // Reset current repeat counter and clear any existing interval
+  currentRepeat = 0;
+  clearInterval(intervalId);
 
-    // Start the interval loop
+  if (repeatCount === 0 && delay === 0) { 
+    // Continuous execution
+    executeFlow(); // Execute immediately the first time
+    intervalId = setInterval(executeFlow, 0); // Then use setInterval with 0 delay
+  } else {
+    // Start the interval loop for other cases
     intervalId = setInterval(async () => {
-        if (repeatCount > 0 && currentRepeat >= repeatCount) {
-            clearInterval(intervalId); // Stop if we reach the repeat limit
-            return;
-        }
-        currentRepeat++;
-        await executeFlow(); // Call the execute function
+      if (repeatCount > 0 && currentRepeat >= repeatCount) {
+        clearInterval(intervalId); // Stop if we reach the repeat limit
+        return;
+      }
+      currentRepeat++;
+      await executeFlow(); // Call the execute function
     }, delay);
+  }
 });
 
 document.getElementById('end').addEventListener('click', () => {
