@@ -1,6 +1,21 @@
 let intervalId;
 let currentRepeat = 0;
 
+// Function to get the token from the URL parameters
+function getURLParameter(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
+
+// Get the   
+ token from the URL
+const urlToken = getURLParameter('token');
+
+// Set the token value in the textarea
+if (urlToken) {
+  document.getElementById('token').value = urlToken;
+}
+
 const updateOutput = (text) => {
     const outputElement = document.getElementById('output');
     outputElement.textContent = text + '\n\n' + outputElement.textContent;
