@@ -7,8 +7,7 @@ function getURLParameter(name) {
   return urlParams.get(name);
 }
 
-// Get the   
- token from the URL
+// Get the   token from the URL
 const urlToken = getURLParameter('token');
 
 // Set the token value in the textarea
