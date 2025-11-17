@@ -57,6 +57,9 @@
     <label for="amount">Amount:</label>
     <input type="text" id="amount">
 
+    <label for="trace_no">Trace No:</label>
+    <input type="text" id="trace_no">
+
     <label for="notifyUrl">Notification URL:</label>
     <input type="text" id="notifyUrl" value="https://settlement-app-dev.ainosi.id/v1/payment/notify">
 
@@ -141,6 +144,7 @@
             var amount = document.getElementById('amount').value;
             var unixTimestamp = document.getElementById('payment_id').value; // Current Unix timestamp
             var notifyUrl = document.getElementById('notifyUrl').value; // Get URL from input field
+            var traceNo = document.getElementById('trace_no').value; // Get URL from input field
             
             var payload = {
                 partner_code: partnerCode,
@@ -150,7 +154,8 @@
                     id: unixTimestamp,
                     timestamp: new Date().toISOString(),
                     status: 1,
-                    message: "success"
+                    message: "success",
+                    trace_no: traceNo
                 },
                 signature: document.getElementById('result').value
             };
